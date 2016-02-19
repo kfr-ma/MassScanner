@@ -8,6 +8,19 @@ import itertools
 
 VERSION = "1.0.0"
 
+def kippo_test(host):
+    port = 22
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host,port))
+    banner = s.recv(1024)
+    s.send('\n\n\n\n\n\n\n\n')
+    response = s.recv(1024)
+    s.close()
+    if "168430090" in response:
+        return 1
+    else
+        return 0
+
 def ip_range(input_string):
     octets = input_string.split('.')
     chunks = [list(map(int, octet.split('-'))) for octet in octets]
@@ -39,6 +52,40 @@ if __name__ == '__main__':
                     total = total + 1
             print(str(total) + " ips writed in " + ans[1])
             db.close()
+        elif ans[0] == "rpot" and len(ans) == 4:
+            if ans[1] == "kippo":
+                if os.path.exists(ans[2]):
+                    db = open(ans[3], "w")
+                    with open(ans[1]) as f:
+                        for line in f:
+                            if kippo_test(line) == 1:
+                                print(line + " is a kippo honeypot !")
+                            else:
+                                db.write(line)
+                                print(line + " is not a kippo honeypot !")
+                        f.close
+                    db.close()
+                else
+                    print("Invalid filename")
+            else:
+                print("Invalid type")
+        elif ans[0] == "hpot" and len(ans) == 4:
+            if ans[1] == "kippo":
+                if os.path.exists(ans[2]):
+                    db = open(ans[3], "w")
+                    with open(ans[1]) as f:
+                        for line in f:
+                            if kippo_test(line) == 1:
+                                db.write(line)
+                                print(line + " is a kippo honeypot !")
+                            else:
+                                print(line + " is not a kippo honeypot !")
+                        f.close
+                    db.close()
+                else
+                    print("Invalid filename")
+            else:
+                print("Invalid type")
         elif ans[0] == "alive" and len(ans) == 3:
             if os.path.exists(ans[1]):
                 db = open(ans[2], "w")
@@ -96,6 +143,8 @@ if __name__ == '__main__':
             print("generate <filename> [ip range: 82-83.0-255.0-255.0.255]: generate ip list from a range (default: 5.0.0.0 to 5.255.255.255)")
             print("port <filename> <output> <port>: generate open port ip list from another ip list")
             print("alive <filename> <output>: generate alive ip list from another ip list")
+            print("hpot <type: kippo> <filename> <output>: generate a list with only honeypots ip")
+            print("rpot <type: kippo> <filename> <output>: generate a list without honeypots ip")
         else:
           print("Error: command not found, type help for showing a list of valid commands")
           ans = True
